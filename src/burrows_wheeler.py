@@ -72,20 +72,32 @@ def inverse_burrows_wheeler_transform(bwt, original_index):
     # Create first and last columns
     first_column = sorted(bwt)
     
-    # Reconstruct the original text using an array to track reconstruction
+    # Use a more robust approach to reconstruct text
+    # Create an array to map characters from first column to last column
+    char_map = {}
+    map_index = {}
+    
+    # First, create a mapping with all occurrences of characters
+    for i, char in enumerate(bwt):
+        if char not in char_map:
+            char_map[char] = []
+        char_map[char].append(i)
+    
+    # Prepare mapping from first column to last column
     n = len(bwt)
     next_chars = [0] * n
     
-    # Create a mapping to track character count and occurrences
-    char_counts = {}
+    # Reconstruct the mapping
     for i, char in enumerate(first_column):
-        # Track first occurrence of each character
-        if char not in char_counts:
-            char_counts[char] = i
+        # Get the next available index for this character
+        if char not in map_index:
+            map_index[char] = 0
         
-        # Map first column to last column
-        next_chars[i] = bwt.index(char, char_counts[char])
-        char_counts[char] += 1
+        # Get the corresponding index in the BWT string
+        next_chars[i] = char_map[char][map_index[char]]
+        
+        # Increment the index for this character
+        map_index[char] += 1
     
     # Reconstruct the original text
     result = []

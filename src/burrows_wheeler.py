@@ -25,10 +25,10 @@ def burrows_wheeler_transform(text):
         raise ValueError("Input string cannot be empty")
     
     # Add a unique terminator character (not in the input)
-    text += '$'
+    text_with_terminator = text + '$'
     
     # Generate all rotations of the text
-    rotations = [text[i:] + text[:i] for i in range(len(text))]
+    rotations = [text_with_terminator[i:] + text_with_terminator[:i] for i in range(len(text_with_terminator))]
     
     # Sort the rotations lexicographically 
     sorted_rotations = sorted(rotations)
@@ -37,7 +37,7 @@ def burrows_wheeler_transform(text):
     bwt = ''.join(rotation[-1] for rotation in sorted_rotations)
     
     # Find the index of the original string in sorted rotations
-    original_index = sorted_rotations.index(text)
+    original_index = sorted_rotations.index(text_with_terminator)
     
     return bwt, original_index
 
@@ -69,30 +69,32 @@ def inverse_burrows_wheeler_transform(bwt, original_index):
     if original_index < 0:
         raise ValueError("Original index cannot be negative")
     
+    # Compute the LF mapping (Last to First column mapping)
+    # First, count character occurrences
+    char_count = {}
+    lf_mapping = []
+    
     # Create first column by sorting
     first_column = sorted(bwt)
     
-    # Create a mapping to track character occurrences
-    first_to_last = {}
-    for i, char in enumerate(first_column):
-        if char not in first_to_last:
-            first_to_last[char] = []
-        first_to_last[char].append(i)
+    # Compute LF mapping
+    for i, char in enumerate(bwt):
+        if char not in char_count:
+            char_count[char] = 0
+        lf_mapping.append(first_column.index(char, char_count[char]))
+        char_count[char] += 1
     
-    # Use a more robust reconstruction method
-    n = len(bwt)
+    # Reconstruct the original text
     reconstructed = []
-    current_index = original_index
+    current = original_index
     
-    for _ in range(n - 1):  # Exclude the terminator
-        # Use the first column character at current_index
-        current_char = first_column[current_index]
-        reconstructed.append(current_char)
+    # Reconstruct until terminator
+    while len(reconstructed) < len(bwt) - 1:
+        # Append the character from BWT
+        reconstructed.append(bwt[current])
         
-        # Find the next index by tracking occurrences in the BWT string
-        occurrence_list = first_to_last[current_char]
-        local_index = occurrence_list.index(current_index)
-        current_index = bwt.index(current_char, local_index)
+        # Move to the next index using LF mapping
+        current = lf_mapping[current]
     
     # Reverse to get the original text
     return ''.join(reconstructed)[::-1]

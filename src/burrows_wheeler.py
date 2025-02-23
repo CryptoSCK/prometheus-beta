@@ -69,42 +69,30 @@ def inverse_burrows_wheeler_transform(bwt, original_index):
     if original_index < 0:
         raise ValueError("Original index cannot be negative")
     
-    # Create first and last columns
+    # Create first column by sorting
     first_column = sorted(bwt)
     
-    # Use a more robust approach to reconstruct text
-    # Create an array to map characters from first column to last column
-    char_map = {}
-    map_index = {}
-    
-    # First, create a mapping with all occurrences of characters
-    for i, char in enumerate(bwt):
-        if char not in char_map:
-            char_map[char] = []
-        char_map[char].append(i)
-    
-    # Prepare mapping from first column to last column
-    n = len(bwt)
-    next_chars = [0] * n
-    
-    # Reconstruct the mapping
+    # Create a mapping to track character occurrences
+    first_to_last = {}
     for i, char in enumerate(first_column):
-        # Get the next available index for this character
-        if char not in map_index:
-            map_index[char] = 0
-        
-        # Get the corresponding index in the BWT string
-        next_chars[i] = char_map[char][map_index[char]]
-        
-        # Increment the index for this character
-        map_index[char] += 1
+        if char not in first_to_last:
+            first_to_last[char] = []
+        first_to_last[char].append(i)
     
-    # Reconstruct the original text
-    result = []
-    current = original_index
-    for _ in range(n - 1):  # Subtract 1 to exclude the terminator
-        current = next_chars[current]
-        result.append(bwt[current])
+    # Use a more robust reconstruction method
+    n = len(bwt)
+    reconstructed = []
+    current_index = original_index
+    
+    for _ in range(n - 1):  # Exclude the terminator
+        # Use the first column character at current_index
+        current_char = first_column[current_index]
+        reconstructed.append(current_char)
+        
+        # Find the next index by tracking occurrences in the BWT string
+        occurrence_list = first_to_last[current_char]
+        local_index = occurrence_list.index(current_index)
+        current_index = bwt.index(current_char, local_index)
     
     # Reverse to get the original text
-    return ''.join(result)[::-1]
+    return ''.join(reconstructed)[::-1]

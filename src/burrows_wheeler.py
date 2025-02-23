@@ -24,11 +24,11 @@ def burrows_wheeler_transform(text):
     if not text:
         raise ValueError("Input string cannot be empty")
     
-    # Add a unique terminator character (not in the input)
-    text_with_terminator = text + '$'
+    # Add a unique terminator character 
+    encoded_text = text + '$'
     
     # Generate all rotations of the text
-    rotations = [text_with_terminator[i:] + text_with_terminator[:i] for i in range(len(text_with_terminator))]
+    rotations = [encoded_text[i:] + encoded_text[:i] for i in range(len(encoded_text))]
     
     # Sort the rotations lexicographically 
     sorted_rotations = sorted(rotations)
@@ -37,7 +37,7 @@ def burrows_wheeler_transform(text):
     bwt = ''.join(rotation[-1] for rotation in sorted_rotations)
     
     # Find the index of the original string in sorted rotations
-    original_index = sorted_rotations.index(text_with_terminator)
+    original_index = sorted_rotations.index(encoded_text)
     
     return bwt, original_index
 
@@ -69,32 +69,43 @@ def inverse_burrows_wheeler_transform(bwt, original_index):
     if original_index < 0:
         raise ValueError("Original index cannot be negative")
     
-    # Compute the LF mapping (Last to First column mapping)
-    # First, count character occurrences
-    char_count = {}
-    lf_mapping = []
-    
-    # Create first column by sorting
+    # First, compute the LF mapping (Last to First column mapping)
     first_column = sorted(bwt)
     
-    # Compute LF mapping
+    # Compute character positions
+    first_pos = {}
+    last_pos = {}
+    for i, char in enumerate(first_column):
+        if char not in first_pos:
+            first_pos[char] = i
+    
     for i, char in enumerate(bwt):
-        if char not in char_count:
-            char_count[char] = 0
-        lf_mapping.append(first_column.index(char, char_count[char]))
-        char_count[char] += 1
+        if char not in last_pos:
+            last_pos[char] = 0
+        last_pos[char] += 1
     
     # Reconstruct the original text
     reconstructed = []
     current = original_index
     
-    # Reconstruct until terminator
+    # Reconstruct while avoiding the terminator
     while len(reconstructed) < len(bwt) - 1:
-        # Append the character from BWT
-        reconstructed.append(bwt[current])
+        # Get the character in BWT at current index
+        current_char = bwt[current]
         
-        # Move to the next index using LF mapping
-        current = lf_mapping[current]
+        # Skip the terminator
+        if current_char == '$':
+            # Find the next occurrence if necessary
+            current = bwt.index('$', current + 1) if current + 1 < len(bwt) else current
+            continue
+        
+        # Add the character to reconstruction
+        reconstructed.append(current_char)
+        
+        # Update current index using LF mapping
+        # Get the position of this character within its group
+        char_pos = first_pos[current_char]
+        current = bwt.index(current_char, char_pos)
     
-    # Reverse to get the original text
+    # Reconstruct only the original text (without terminator)
     return ''.join(reconstructed)[::-1]

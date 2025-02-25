@@ -31,23 +31,13 @@ def reverse_words_in_string(input_string):
         if not word.isalpha():
             return word
         
-        # Reverse the word characters
-        reversed_chars = list(word[::-1])
-        
-        # Restore original case
+        # Compute case-preserving reverse
         if word.istitle():
-            # First char uppercase, rest lowercase
-            reversed_chars[0] = reversed_chars[0].upper()
-            for i in range(1, len(reversed_chars)):
-                reversed_chars[i] = reversed_chars[i].lower()
+            return word[::-1].lower().capitalize()
         elif word.isupper():
-            # All uppercase
-            reversed_chars = [c.upper() for c in reversed_chars]
-        elif word.islower():
-            # All lowercase
-            reversed_chars = [c.lower() for c in reversed_chars]
-        
-        return ''.join(reversed_chars)
+            return word[::-1].upper()
+        else:
+            return word[::-1].lower()
     
     # Process the string
     tokens = split_with_punctuation(input_string)

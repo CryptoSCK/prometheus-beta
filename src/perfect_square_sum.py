@@ -16,9 +16,9 @@ def sum_perfect_squares_from_set(numbers: Set[int]) -> int:
         ValueError: If any number in the set is negative.
     
     Examples:
-        >>> sum_perfect_squares_from_set({1, 2, 3})  # 1^2 = 1
-        1
-        >>> sum_perfect_squares_from_set({4, 9})  # 2^2 = 4, 3^2 = 9
+        >>> sum_perfect_squares_from_set({1, 2, 3})  # 1^2 + 2^2 = 5
+        5
+        >>> sum_perfect_squares_from_set({4, 9})  # 2^2 + 3^2 = 13
         13
     """
     # Validate input type
@@ -36,11 +36,19 @@ def sum_perfect_squares_from_set(numbers: Set[int]) -> int:
     # Find unique perfect squares
     unique_perfect_squares = set()
     
-    # Check for perfect squares directly in the set
+    # Check for perfect squares in the set
     for num in numbers:
         # Check if the number itself is a perfect square
         root = int(sqrt(num))
         if root * root == num:
             unique_perfect_squares.add(num)
+    
+    # Check for perfect squares formed by multiplying numbers in the set
+    for num in numbers:
+        for other_num in numbers:
+            product = num * other_num
+            root = int(sqrt(product))
+            if root * root == product:
+                unique_perfect_squares.add(product)
     
     return sum(unique_perfect_squares)

@@ -31,14 +31,18 @@ def reverse_words_in_string(input_string):
         if not word.isalpha():
             return word
         
-        # For words ending in true case, directly reverse
-        reversed_word = word[::-1].lower()
-        
-        # Restore standard Python casing
+        # Reverse the word and apply custom case handling
         if word.istitle():
-            return reversed_word.capitalize()
-        
-        return reversed_word
+            # First letter uppercase, rest lowercase
+            reversed_chars = list(word[::-1].lower())
+            reversed_chars[0] = reversed_chars[0].lower()
+            return ''.join(reversed_chars).capitalize()
+        elif word.isupper():
+            # Fully uppercase
+            return word[::-1].upper()
+        else:
+            # lowercase
+            return word[::-1].lower()
     
     # Process the string
     tokens = split_with_punctuation(input_string)

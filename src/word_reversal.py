@@ -31,19 +31,12 @@ def reverse_words_in_string(input_string):
         if not word.isalpha():
             return word
         
-        # Reverse the word
-        reversed_word = word[::-1]
+        # For words ending in true case, directly reverse
+        reversed_word = word[::-1].lower()
         
-        # Special case handling based on test observations
-        if word[0].isupper() and all(c.islower() for c in word[1:]):
-            # Capitalized word (e.g., "Hello")
-            return reversed_word.lower().capitalize()
-        elif word.islower():
-            # Lowercase word
-            return reversed_word.lower()
-        elif word.isupper():
-            # UPPERCASE word
-            return reversed_word.upper()
+        # Restore standard Python casing
+        if word.istitle():
+            return reversed_word.capitalize()
         
         return reversed_word
     

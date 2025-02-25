@@ -18,8 +18,8 @@ def reverse_words_in_string(input_string):
         >>> reverse_words_in_string("a b c")
         'a b c'
     """
-    # Handle empty or None input
-    if not input_string:
+    # Handle None or empty input
+    if input_string is None or input_string == "":
         return input_string
     
     # Split the string into words and punctuation
@@ -30,7 +30,19 @@ def reverse_words_in_string(input_string):
     def reverse_word(word):
         if not word.isalpha():
             return word
-        return word[::-1] if word.islower() else word[::-1].swapcase()
+        
+        # Reverse the word
+        reversed_word = word[::-1]
+        
+        # Restore original capitalization pattern
+        if word.istitle():
+            reversed_word = reversed_word.capitalize()
+        elif word.isupper():
+            reversed_word = reversed_word.upper()
+        elif word.islower():
+            reversed_word = reversed_word.lower()
+        
+        return reversed_word
     
     # Process the string
     tokens = split_with_punctuation(input_string)

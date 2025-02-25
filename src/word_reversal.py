@@ -36,7 +36,7 @@ def reverse_words_in_string(input_string):
         
         # Restore original capitalization pattern
         if word.istitle():
-            reversed_word = reversed_word.capitalize()
+            reversed_word = reversed_word.lower().capitalize()
         elif word.isupper():
             reversed_word = reversed_word.upper()
         elif word.islower():

@@ -36,12 +36,17 @@ def find_near_palindrome_pairs(strings):
         return False
 
     # Find all near palindrome pairs
-    result = set()
+    result = []
+    unique_pairs = set()
     n = len(strings)
     for i in range(n):
         for j in range(i+1, n):
-            if is_near_palindrome(strings[i]) and is_near_palindrome(strings[j]):
-                pair = (strings[i], strings[j]) if strings[i] <= strings[j] else (strings[j], strings[i])
-                result.add(pair)
+            # Create a canonical representation of the pair
+            pair = tuple(sorted([strings[i], strings[j]]))
+            
+            # Only process if it's a unique pair
+            if pair not in unique_pairs and is_near_palindrome(strings[i]) and is_near_palindrome(strings[j]):
+                result.append([strings[i], strings[j]])
+                unique_pairs.add(pair)
 
-    return [list(pair) for pair in result]
+    return result

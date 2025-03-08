@@ -9,7 +9,7 @@ def find_near_palindrome_pairs(strings):
         strings (list): A list of strings to check for near palindrome pairs.
 
     Returns:
-        list: A list of pairs of strings that are close to being palindromes.
+        list: A list of unique pairs of strings that are close to being palindromes.
     """
     def is_near_palindrome(s):
         """
@@ -36,11 +36,12 @@ def find_near_palindrome_pairs(strings):
         return False
 
     # Find all near palindrome pairs
-    result = []
+    result = set()
     n = len(strings)
     for i in range(n):
         for j in range(i+1, n):
             if is_near_palindrome(strings[i]) and is_near_palindrome(strings[j]):
-                result.append([strings[i], strings[j]])
+                pair = (strings[i], strings[j]) if strings[i] <= strings[j] else (strings[j], strings[i])
+                result.add(pair)
 
-    return result
+    return [list(pair) for pair in result]

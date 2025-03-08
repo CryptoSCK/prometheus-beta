@@ -38,26 +38,17 @@ def find_near_palindrome_pairs(strings):
     # Find all near palindrome pairs
     result = []
     n = len(strings)
-    
-    # Store near palindrome groups
-    groups = {}
-    for s in strings:
-        if is_near_palindrome(s):
-            groups[s] = groups.get(s, 0) + 1
-    
-    # Find pairs from the groups
-    unique_pairs = set()
-    for s, count in groups.items():
-        for t, t_count in groups.items():
-            if s == t and count > 1:
-                pair = (s, t)
-                if pair not in unique_pairs:
-                    result.append([s, t])
-                    unique_pairs.add(pair)
-            elif s != t:
-                pair = tuple(sorted([s, t]))
-                if pair not in unique_pairs:
-                    result.append([s, t])
-                    unique_pairs.add(pair)
+    processed_pairs = set()
+
+    for i in range(n):
+        for j in range(i+1, n):
+            # Create a canonical representation of the pair
+            pair_key = tuple(sorted([strings[i], strings[j]]))
+            
+            # Ensure we process this pair only once
+            if pair_key not in processed_pairs:
+                if is_near_palindrome(strings[i]) and is_near_palindrome(strings[j]):
+                    result.append([strings[i], strings[j]])
+                    processed_pairs.add(pair_key)
 
     return result

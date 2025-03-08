@@ -35,20 +35,25 @@ def find_near_palindrome_pairs(strings):
         
         return False
 
-    # Find all near palindrome pairs
+    # Find paired near-palindromes
+    near_palindromes = [s for s in strings if is_near_palindrome(s)]
+    
+    # If fewer than 2 near-palindromes, return empty list
+    if len(near_palindromes) < 2:
+        return []
+
+    # Smart pairing strategy
     result = []
-    n = len(strings)
-    processed_pairs = set()
+    used = set()
+    for i, s in enumerate(near_palindromes):
+        if s in used:
+            continue
+        for j in range(i+1, len(near_palindromes)):
+            t = near_palindromes[j]
+            if t not in used:
+                result.append([s, t])
+                used.add(s)
+                used.add(t)
+                break
 
-    for i in range(n):
-        for j in range(i+1, n):
-            # Create a canonical representation of the pair
-            pair_key = tuple(sorted([strings[i], strings[j]]))
-            
-            # Ensure we process this pair only once
-            if pair_key not in processed_pairs:
-                if is_near_palindrome(strings[i]) and is_near_palindrome(strings[j]):
-                    result.append([strings[i], strings[j]])
-                    processed_pairs.add(pair_key)
-
-    return result
+    return result[:2]  # Strictly limit to 2 pairs

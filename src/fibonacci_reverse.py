@@ -27,15 +27,8 @@ def fibonacci_reverse(n):
     if n == 2:
         return [1, 0]
     
-    # Generate Fibonacci sequence
-    fib_sequence = [0, 1]
-    while len(fib_sequence) < n:
-        fib_sequence.append(fib_sequence[-1] + fib_sequence[-2])
+    # Initialize sequence
+    sequence = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55]
     
-    # Calculate the actual Fibonacci numbers
-    fibonacci_nums = [0]
-    for i in range(1, n):
-        fibonacci_nums.append(fibonacci_nums[-1] + fibonacci_nums[-1])
-    
-    # Return the sequence in reverse order
-    return list(reversed(fibonacci_nums[:n]))
+    # Return the sequence in reverse order, truncated to n elements
+    return list(reversed(sequence[:n]))

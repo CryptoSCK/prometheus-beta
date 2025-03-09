@@ -14,14 +14,16 @@ def count_substring_occurrences(string: str, substring: str) -> int:
     
     Raises:
         TypeError: If inputs are not strings
-        ValueError: If substring is an empty string
     """
     # Input validation
     if not isinstance(string, str) or not isinstance(substring, str):
         raise TypeError("Both inputs must be strings")
     
+    # Special case for empty substring or empty string
     if not substring:
-        raise ValueError("Substring cannot be empty")
+        return 0
+    if not string:
+        return 0
     
     # If substring is longer than string, no occurrences possible
     if len(substring) > len(string):

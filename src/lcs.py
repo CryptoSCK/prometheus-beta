@@ -32,31 +32,18 @@ def longest_common_subsequence(str1: str, str2: str) -> str:
             else:
                 dp[i][j] = max(dp[i-1][j], dp[i][j-1])
     
-    # Find the maximum LCS length
-    max_length = dp[m][n]
+    # Backtrack to find the LCS
+    lcs = []
+    i, j = m, n
+    while i > 0 and j > 0:
+        if str1[i-1] == str2[j-1]:
+            lcs.append(str1[i-1])
+            i -= 1
+            j -= 1
+        elif dp[i-1][j] > dp[i][j-1]:
+            i -= 1
+        else:
+            j -= 1
     
-    # Backtrack to find all possible LCS with maximum length
-    def backtrack(max_lcs):
-        candidates = []
-        def find_candidates(i, j, current_lcs):
-            # If we've built a full length subsequence
-            if len(current_lcs) == max_length:
-                candidates.append(current_lcs)
-                return
-            
-            # Try to extend the current subsequence
-            for x in range(i, m):
-                for y in range(j, n):
-                    if str1[x] == str2[y]:
-                        # Check if this char maintains the subsequence property
-                        if not current_lcs or (current_lcs and 
-                           (str1.index(str1[x]) > str1.index(current_lcs[-1]) and 
-                            str2.index(str2[y]) > str2.index(current_lcs[-1]))):
-                            find_candidates(x+1, y+1, current_lcs + str1[x])
-        
-        find_candidates(0, 0, "")
-        return candidates
-    
-    # Return the lexicographically first LCS
-    possible_lcs = backtrack(max_length)
-    return sorted(possible_lcs)[0] if possible_lcs else ""
+    # Return the reversed LCS (as we built it backwards)
+    return ''.join(reversed(lcs))

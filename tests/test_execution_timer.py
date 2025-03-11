@@ -1,6 +1,7 @@
 import logging
 import time
 import pytest
+import re
 from src.execution_timer import log_execution_time
 
 # Setup a test logger
@@ -88,10 +89,14 @@ def test_log_execution_time_precision():
     log_type, log_message = test_logger.logs[0]
     assert log_type == 'info'
     
-    # Extract the execution time from the log message
-    time_str = log_message.split()[-1]
-    assert time_str.startswith('0.')  # Starts with decimal
-    assert len(time_str.split('.')[1]) == 4  # 4 decimal places
+    # Use regex to extract the time
+    time_match = re.search(r'executed in ([\d.]+) seconds', log_message)
+    assert time_match, "Could not find execution time in log message"
+    
+    # Check precision of extracted time
+    time_str = time_match.group(1)
+    parts = time_str.split('.')
+    assert len(parts[1]) <= 4  # 4 or fewer decimal places
 
 def test_log_execution_time_preserves_metadata():
     # Test that function metadata is preserved

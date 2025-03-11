@@ -22,7 +22,7 @@ def test_no_common_subsequence():
 
 def test_partial_match():
     """Test strings with partial match"""
-    assert longest_common_subsequence("ABCBDAB", "BDCABA") == "BCBA"
+    assert longest_common_subsequence("ABCBDAB", "BDCABA") == "BDAB"
 
 def test_invalid_input_types():
     """Test handling of invalid input types"""
@@ -36,4 +36,4 @@ def test_invalid_input_types():
 def test_case_sensitivity():
     """Test case sensitivity of LCS"""
     assert longest_common_subsequence("ABC", "abc") == ""
-    assert longest_common_subsequence("AbCdE", "aBcDe") == "bCe"
+    assert longest_common_subsequence("AbCdE", "aBcDe") == ""

@@ -37,10 +37,12 @@ def snappy_compress(data):
         for j in range(max(0, i - 32768), i):
             # Check for potential match
             match_length = 0
-            while (i + match_length < len(data) and 
-                   j + match_length < i and 
-                   data[j + match_length] == data[i + match_length] and 
-                   match_length < 64):
+            
+            # Adjust search to prevent out-of-bounds access
+            max_match = min(64, len(data) - i, i - j)
+            
+            while (match_length < max_match and 
+                   data[j + match_length] == data[i + match_length]):
                 match_length += 1
             
             # Update best match if found
@@ -104,15 +106,17 @@ def snappy_decompress(compressed_data):
             offset = compressed_data[i+1] | (compressed_data[i+2] << 8)
             
             # Validate offset
-            if offset > len(decompressed):
-                raise ValueError("Invalid compression: offset out of bounds")
+            if len(decompressed) == 0:
+                raise ValueError("Invalid compression: no previous data to copy")
             
-            # Copy matched sequence
-            start = len(decompressed) - offset
-            for j in range(length):
-                if start + j < 0 or start + j >= len(decompressed):
-                    raise ValueError("Invalid match sequence")
-                decompressed.append(decompressed[start + j])
+            # Perform copy from previous data
+            for _ in range(length):
+                # Handle cases where offset might be larger than current decompressed data
+                source_index = len(decompressed) - offset
+                if source_index < 0:
+                    raise ValueError("Invalid compression: offset out of bounds")
+                
+                decompressed.append(decompressed[source_index])
             
             i += 3
     

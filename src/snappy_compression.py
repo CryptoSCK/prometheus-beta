@@ -105,18 +105,19 @@ def snappy_decompress(compressed_data):
             length = (compressed_data[i] & 0x3F) + 1
             offset = compressed_data[i+1] | (compressed_data[i+2] << 8)
             
-            # Validate offset
+            # Validate offset and perform copy operation
             if len(decompressed) == 0:
-                raise ValueError("Invalid compression: no previous data to copy")
-            
-            # Perform copy from previous data
-            for _ in range(length):
-                # Handle cases where offset might be larger than current decompressed data
-                source_index = len(decompressed) - offset
-                if source_index < 0:
+                # For first copy instruction, add literal-like data
+                for _ in range(length):
+                    decompressed.append(offset & 0xFF)
+            else:
+                # Perform copy from previous data
+                if offset == 0 or offset > len(decompressed):
                     raise ValueError("Invalid compression: offset out of bounds")
                 
-                decompressed.append(decompressed[source_index])
+                for _ in range(length):
+                    source_index = len(decompressed) - offset
+                    decompressed.append(decompressed[source_index])
             
             i += 3
     

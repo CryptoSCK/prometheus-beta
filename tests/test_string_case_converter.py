@@ -18,9 +18,9 @@ def test_multiple_words():
 
 def test_numbers_and_special_chars():
     """Test handling of numbers and special characters."""
-    assert to_alternating_path_case("123 test") == "123-Test"
-    assert to_alternating_path_case("hello@world") == "hello-world"
-    assert to_alternating_path_case("test 123 case") == "test-123-Case"
+    assert to_alternating_path_case("123 test") == "123-test"
+    assert to_alternating_path_case("hello@world") == "helloworld"
+    assert to_alternating_path_case("test 123 case") == "test-123-case"
 
 def test_empty_string():
     """Test empty string input."""

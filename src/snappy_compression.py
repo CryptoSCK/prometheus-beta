@@ -1,13 +1,13 @@
 """
-Simplified Snappy Compression Algorithm Implementation
+Basic Compression and Decompression Utility
 
-This module provides a basic implementation of a Snappy-like compression algorithm.
-Note: This is a simplified version and does not represent the full Snappy algorithm.
+This module provides simple compression and decompression functions.
+Note: This is a very basic implementation and not a true Snappy algorithm.
 """
 
 def snappy_compress(data):
     """
-    Compress input data using a simplified compression algorithm.
+    Compress input data using a simple run-length encoding approach.
     
     Args:
         data (bytes): Input data to compress
@@ -27,46 +27,28 @@ def snappy_compress(data):
         raise ValueError("Input cannot be empty")
     
     compressed = bytearray()
-    i = 0
+    count = 1
+    current = data[0]
     
-    while i < len(data):
-        # Look for repeated sequences
-        best_length = 1
-        best_offset = 0
-        
-        # Search backwards for potential matches
-        search_start = max(0, i - 32768)
-        for j in range(search_start, i):
-            # Check for potential match
-            match_length = 0
-            while (i + match_length < len(data) and 
-                   j + match_length < i and 
-                   data[j + match_length] == data[i + match_length] and 
-                   match_length < 64):
-                match_length += 1
-            
-            # Update best match if found
-            if match_length > best_length:
-                best_length = match_length
-                best_offset = i - j
-        
-        # Compress sequence
-        if best_length > 4:
-            # Encode copy instruction with length and offset
-            compressed.append(0b01000000 | (best_length - 1))
-            compressed.append(best_offset & 0xFF)
-            compressed.append((best_offset >> 8) & 0xFF)
-            i += best_length
+    for byte in data[1:]:
+        if byte == current and count < 255:
+            count += 1
         else:
-            # Literal byte
-            compressed.append(data[i])
-            i += 1
+            # Store the count and the byte
+            compressed.append(count)
+            compressed.append(current)
+            current = byte
+            count = 1
+    
+    # Add the last sequence
+    compressed.append(count)
+    compressed.append(current)
     
     return bytes(compressed)
 
 def snappy_decompress(compressed_data):
     """
-    Decompress data compressed with the simplified compression algorithm.
+    Decompress data compressed with the simple run-length encoding.
     
     Args:
         compressed_data (bytes): Compressed input data
@@ -85,39 +67,17 @@ def snappy_decompress(compressed_data):
     if not compressed_data:
         raise ValueError("Input cannot be empty")
     
-    decompressed = bytearray()
-    i = 0
+    # Ensure even number of bytes
+    if len(compressed_data) % 2 != 0:
+        raise ValueError("Invalid compressed data")
     
-    while i < len(compressed_data):
-        current_byte = compressed_data[i]
+    decompressed = bytearray()
+    
+    for i in range(0, len(compressed_data), 2):
+        count = compressed_data[i]
+        byte = compressed_data[i+1]
         
-        # Check if it's a literal or copy instruction
-        if current_byte < 0b01000000:
-            # Literal byte
-            decompressed.append(current_byte)
-            i += 1
-        else:
-            # Copy instruction
-            # Ensure enough bytes for full instruction
-            if i + 2 >= len(compressed_data):
-                break
-            
-            # Extract length and offset
-            length = (current_byte & 0x3F) + 1
-            offset = compressed_data[i+1] | (compressed_data[i+2] << 8)
-            
-            # If no previous data, use offset as literal data
-            if len(decompressed) == 0:
-                for _ in range(length):
-                    decompressed.append(offset & 0xFF)
-            else:
-                # Copy from previous data
-                start = len(decompressed) - offset
-                for j in range(length):
-                    if start + j < 0:
-                        break
-                    decompressed.append(decompressed[start + j])
-            
-            i += 3
+        # Repeat the byte 'count' times
+        decompressed.extend([byte] * count)
     
     return bytes(decompressed)

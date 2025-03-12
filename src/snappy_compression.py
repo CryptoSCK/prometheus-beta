@@ -1,16 +1,12 @@
 """
-Snappy Compression Algorithm Implementation
+Simplified Snappy Compression Algorithm Implementation
 
-This module provides a basic implementation of the Snappy compression algorithm.
-Snappy is a fast compression/decompression library developed by Google.
-
-Note: This is a simplified implementation and does not cover all 
-complexities of the full Snappy algorithm.
+This module provides a basic implementation of a Snappy-like compression algorithm.
 """
 
 def snappy_compress(data):
     """
-    Compress input data using a simplified Snappy-like compression algorithm.
+    Compress input data using a simplified compression algorithm.
     
     Args:
         data (bytes): Input data to compress
@@ -42,6 +38,7 @@ def snappy_compress(data):
             # Check for potential match
             match_length = 0
             while (i + match_length < len(data) and 
+                   j + match_length < i and 
                    data[j + match_length] == data[i + match_length] and 
                    match_length < 64):
                 match_length += 1
@@ -53,8 +50,9 @@ def snappy_compress(data):
         
         # Compress sequence
         if best_length > 4:
-            # Encoded copy instruction
-            compressed.append(best_length - 1)
+            # Encode copy instruction (using bit manipulation for encoding)
+            copy_marker = 0b01000000 | (best_length - 1)
+            compressed.append(copy_marker)
             compressed.append(best_offset & 0xFF)
             compressed.append((best_offset >> 8) & 0xFF)
             i += best_length
@@ -67,7 +65,7 @@ def snappy_compress(data):
 
 def snappy_decompress(compressed_data):
     """
-    Decompress data compressed with the simplified Snappy-like algorithm.
+    Decompress data compressed with the simplified compression algorithm.
     
     Args:
         compressed_data (bytes): Compressed input data
@@ -90,13 +88,18 @@ def snappy_decompress(compressed_data):
     i = 0
     
     while i < len(compressed_data):
-        # Check for copy instruction or literal
-        if compressed_data[i] < 64:
+        # Check if it's a literal or copy instruction
+        if compressed_data[i] < 0b01000000:
             # Literal byte
             decompressed.append(compressed_data[i])
             i += 1
         else:
             # Copy instruction
+            # Ensure there are enough bytes for copy instruction
+            if i + 2 >= len(compressed_data):
+                raise ValueError("Incomplete compression data")
+            
+            # Decode length and offset
             length = (compressed_data[i] & 0x3F) + 1
             offset = compressed_data[i+1] | (compressed_data[i+2] << 8)
             
@@ -105,8 +108,11 @@ def snappy_decompress(compressed_data):
                 raise ValueError("Invalid compression: offset out of bounds")
             
             # Copy matched sequence
+            start = len(decompressed) - offset
             for j in range(length):
-                decompressed.append(decompressed[len(decompressed) - offset + j])
+                if start + j < 0 or start + j >= len(decompressed):
+                    raise ValueError("Invalid match sequence")
+                decompressed.append(decompressed[start + j])
             
             i += 3
     

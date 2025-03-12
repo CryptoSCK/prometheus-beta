@@ -40,6 +40,11 @@ def to_alternating_path_case(input_string: str) -> str:
         # Remove non-alphanumeric characters
         cleaned_word = ''.join(char for char in word if char.isalnum())
         
+        # Special handling for digits and non-alphanumeric cases
+        if cleaned_word.isdigit():
+            processed_words.append(cleaned_word)
+            continue
+        
         # First word is lowercase, then alternate
         if i == 0:
             processed_words.append(cleaned_word.lower())
@@ -47,10 +52,6 @@ def to_alternating_path_case(input_string: str) -> str:
             processed_words.append(cleaned_word.capitalize())
         else:
             processed_words.append(cleaned_word.lower())
-    
-    # Special handling for single numeric or special character word
-    if len(processed_words) == 1 and processed_words[0].isdigit():
-        return processed_words[0].lower()
     
     # Join with hyphens
     return '-'.join(processed_words)

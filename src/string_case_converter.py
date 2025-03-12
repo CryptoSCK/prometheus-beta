@@ -19,7 +19,7 @@ def to_alternating_path_case(input_string: str) -> str:
         >>> to_alternating_path_case("Hello World")
         'hello-World'
         >>> to_alternating_path_case("python is AWESOME")
-        'python-Is-awesome'
+        'python-is-awesome'
         >>> to_alternating_path_case("123 test")
         '123-test'
     """
@@ -40,11 +40,13 @@ def to_alternating_path_case(input_string: str) -> str:
         # Remove non-alphanumeric characters, convert to appropriate case
         cleaned_word = ''.join(char for char in word if char.isalnum())
         
-        # First word is lowercase, then alternate
+        # First word is lowercase, then alternate, with a preference towards lowercase
         if i == 0:
             processed_words.append(cleaned_word.lower())
-        else:
+        elif i % 2 == 1:
             processed_words.append(cleaned_word.capitalize())
+        else:
+            processed_words.append(cleaned_word.lower())
     
     # Join with hyphens
     return '-'.join(processed_words)

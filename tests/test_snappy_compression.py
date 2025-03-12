@@ -23,6 +23,7 @@ def test_compress_decompress_repeated_sequence():
     """Test compression of highly repetitive data"""
     original = b"abcabcabcabcabcabc" * 10
     compressed = snappy_compress(original)
+    # Verify basic compression
     assert len(compressed) < len(original)
     decompressed = snappy_decompress(compressed)
     assert decompressed == original
@@ -31,6 +32,7 @@ def test_compress_decompress_binary_data():
     """Test compression of binary data"""
     original = bytes(range(256)) * 5
     compressed = snappy_compress(original)
+    # Verify basic compression
     decompressed = snappy_decompress(compressed)
     assert decompressed == original
 
@@ -61,6 +63,7 @@ def test_complex_compression():
     """Test compression of a more complex input"""
     original = b"This is a test of the Snappy compression algorithm. " * 20
     compressed = snappy_compress(original)
+    # Verify basic compression
     assert len(compressed) < len(original)
     decompressed = snappy_decompress(compressed)
     assert decompressed == original

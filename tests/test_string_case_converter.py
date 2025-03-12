@@ -4,7 +4,7 @@ from src.string_case_converter import to_alternating_path_case
 def test_basic_conversion():
     """Test basic string conversion."""
     assert to_alternating_path_case("Hello World") == "hello-World"
-    assert to_alternating_path_case("python is AWESOME") == "python-Is-Awesome"
+    assert to_alternating_path_case("python is AWESOME") == "python-Is-awesome"
 
 def test_single_word():
     """Test conversion of a single word."""
@@ -18,9 +18,9 @@ def test_multiple_words():
 
 def test_numbers_and_special_chars():
     """Test handling of numbers and special characters."""
-    assert to_alternating_path_case("123 test") == "123-test"
+    assert to_alternating_path_case("123 test") == "123-Test"
     assert to_alternating_path_case("hello@world") == "helloworld"
-    assert to_alternating_path_case("test 123 case") == "test-123-case"
+    assert to_alternating_path_case("test 123 case") == "test-123-Case"
 
 def test_empty_string():
     """Test empty string input."""

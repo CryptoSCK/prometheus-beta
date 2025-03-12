@@ -40,6 +40,10 @@ def to_alternating_path_case(input_string: str) -> str:
         # Remove non-alphanumeric characters
         cleaned_word = ''.join(char for char in word if char.isalnum())
         
+        # Skip empty strings
+        if not cleaned_word:
+            continue
+        
         # Special handling for digits and non-alphanumeric cases
         if cleaned_word.isdigit():
             processed_words.append(cleaned_word)

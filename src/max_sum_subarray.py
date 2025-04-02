@@ -19,14 +19,19 @@ def maxSumSubarray(arr, k):
     if k > len(arr):
         raise ValueError("Subarray length k cannot be larger than the input array")
     
-    # Initialize the maximum sum
+    # Initialize variables
     max_sum = float('-inf')
     
-    # Iterate through non-overlapping subarrays
-    for i in range(0, len(arr), k):
-        # Check if we can form a complete subarray of length k
-        if i + k <= len(arr):
+    # Track last used index to ensure non-overlapping subarrays
+    last_used_index = -k
+    
+    # Iterate through the array
+    for i in range(len(arr)):
+        # If we can form a complete subarray without overlapping
+        if i + k <= len(arr) and i >= last_used_index + k:
             current_sum = sum(arr[i:i+k])
-            max_sum = max(max_sum, current_sum)
+            if current_sum > max_sum:
+                max_sum = current_sum
+                last_used_index = i
     
     return max_sum

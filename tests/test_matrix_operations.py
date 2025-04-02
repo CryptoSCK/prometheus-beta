@@ -23,7 +23,7 @@ def test_different_row_lengths_raises_error():
     """Test that matrices with inconsistent row lengths raise an error."""
     matrix1 = [[1, 2], [3, 4]]
     matrix2 = [[1, 2, 3], [4, 5, 6]]
-    with pytest.raises(ValueError, match="All rows in each matrix must have the same length"):
+    with pytest.raises(ValueError, match="Matrices must have the same number of columns"):
         add_matrices(matrix1, matrix2)
 
 def test_different_matrix_sizes_raises_error():

@@ -1,4 +1,5 @@
 import unicodedata
+import re
 
 def count_vowels(text: str) -> int:
     """
@@ -28,4 +29,4 @@ def count_vowels(text: str) -> int:
     vowels = set('aeiou')
     
     # Convert input to lowercase and count vowels
-    return sum(1 for char in normalized_text.lower() if char in vowels)
+    return sum(1 for char in normalized_text.lower() if char in vowels and char.isalpha())

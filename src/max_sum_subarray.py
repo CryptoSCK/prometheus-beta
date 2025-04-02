@@ -1,13 +1,13 @@
 def maxSumSubarray(arr, k):
     """
-    Find the maximum sum of a subarray with length k.
+    Find the maximum sum of a non-overlapping subarray with length k.
     
     Args:
         arr (list): Input array of numbers
         k (int): Length of the subarray
     
     Returns:
-        int: Maximum sum of a subarray of length k
+        int: Maximum sum of a non-overlapping subarray of length k
     
     Raises:
         ValueError: If k is invalid (less than or equal to 0 or greater than array length)
@@ -19,16 +19,20 @@ def maxSumSubarray(arr, k):
     if k > len(arr):
         raise ValueError("Subarray length k cannot be larger than the input array")
     
-    # Initialize max sum to first k elements
-    max_sum = sum(arr[0:k])
+    # Track last used index to ensure non-overlapping
+    last_used_index = -1
+    max_sum = 0
     
-    # Sliding window approach
-    current_sum = max_sum
-    
-    # Slide the window through the rest of the array
-    for i in range(k, len(arr)):
-        # Remove the first element of the previous window and add the next element
-        current_sum = current_sum - arr[i-k] + arr[i]
-        max_sum = max(max_sum, current_sum)
+    # Iterate to find maximum sum
+    for i in range(len(arr)):
+        # If current index is not part of previous subarray
+        if i - last_used_index >= k:
+            # Find the maximum sum k-length subarray starting at this index
+            current_sum = sum(arr[i:i+k])
+            max_sum = max(max_sum, current_sum)
+            
+            # Update last used index if we found a greater sum
+            if current_sum > max_sum:
+                last_used_index = i + k - 1
     
     return max_sum

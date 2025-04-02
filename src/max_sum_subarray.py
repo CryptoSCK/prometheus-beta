@@ -19,12 +19,16 @@ def maxSumSubarray(arr, k):
     if k > len(arr):
         raise ValueError("Subarray length k cannot be larger than the input array")
     
-    # Track maximum sum
-    max_sum = float('-inf')
+    # Initialize max sum to first k elements
+    max_sum = sum(arr[0:k])
     
-    # Iterate through all possible subarrays of length k
-    for i in range(len(arr) - k + 1):
-        current_sum = sum(arr[i:i+k])
+    # Sliding window approach
+    current_sum = max_sum
+    
+    # Slide the window through the rest of the array
+    for i in range(k, len(arr)):
+        # Remove the first element of the previous window and add the next element
+        current_sum = current_sum - arr[i-k] + arr[i]
         max_sum = max(max_sum, current_sum)
     
     return max_sum

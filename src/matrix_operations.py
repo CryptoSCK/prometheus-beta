@@ -36,10 +36,14 @@ def add_matrices(matrix1, matrix2):
     if len(matrix1) != len(matrix2):
         raise ValueError("Matrices must have the same number of rows")
     
-    # Check that all rows have the same length
+    # Check that all rows in each matrix have consistent length
     if any(len(row) != len(matrix1[0]) for row in matrix1) or \
        any(len(row) != len(matrix2[0]) for row in matrix2):
         raise ValueError("All rows in each matrix must have the same length")
+    
+    # Check matrix column compatibility 
+    if len(matrix1[0]) != len(matrix2[0]):
+        raise ValueError("Matrices must have the same number of columns")
     
     # Check that all elements are numeric
     def is_numeric(value):

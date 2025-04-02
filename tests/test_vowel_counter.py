@@ -22,7 +22,7 @@ def test_count_vowels_no_vowels():
 
 def test_count_vowels_special_characters():
     """Test string with special characters and mixed vowels."""
-    assert count_vowels("H3ll0, W0rld!") == 1  # Updated to match actual implementation
+    assert count_vowels("H3ll0, W0rld!") == 0  # No alphabetic vowels
     assert count_vowels("python 3.9") == 1
 
 def test_count_vowels_unicode():

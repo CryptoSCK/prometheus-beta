@@ -40,8 +40,9 @@ def find_pairs_with_sum(arr, target_sum):
             # Add the pair in a consistent order
             pair = tuple(sorted((num, complement)))
             
-            # Avoid duplicate pairs
+            # Avoid duplicate pairs and limit to first pair found
             if pair not in result:
                 result.append(pair)
+                break  # Stop after finding first pair
     
     return result

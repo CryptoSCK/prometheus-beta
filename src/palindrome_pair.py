@@ -8,11 +8,14 @@ def is_palindrome(num):
     Returns:
         bool: True if the number is a palindrome, False otherwise.
     """
-    # Single digit numbers are not considered palindromes
-    if abs(num) < 10:
+    # Convert to positive value and string
+    num_str = str(abs(num))
+    
+    # Require at least 2 digits to be a palindrome
+    if len(num_str) < 2:
         return False
     
-    return str(abs(num)) == str(abs(num))[::-1]
+    return num_str == num_str[::-1]
 
 def palindrome_pair(nums):
     """

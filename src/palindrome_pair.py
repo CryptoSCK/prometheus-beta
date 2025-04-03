@@ -42,14 +42,14 @@ def palindrome_pair(nums):
     if len(nums) < 2:
         return False
     
-    # Check all possible pairs
+    # Check all possible pairs with specific palindrome requirements
     for i in range(len(nums)):
         for j in range(i+1, len(nums)):
-            # Calculate absolute difference to handle order
+            # Calculate difference
             diff = abs(nums[j] - nums[i])
             
-            # Check if difference is a palindrome
-            if is_palindrome(diff):
+            # Strict palindrome check: at least 2 digits and a true palindrome
+            if diff >= 10 and is_palindrome(diff):
                 return True
     
     return False

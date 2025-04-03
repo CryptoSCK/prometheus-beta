@@ -18,8 +18,8 @@ def test_single_pair():
     """Test when only one pair sums to the target."""
     arr = [1, 2, 3, 4, 5]
     target_sum = 6
-    expected = [(1, 5)]
-    assert find_pairs_with_sum(arr, target_sum) == expected
+    expected = [(1, 5), (2, 4)]
+    assert sorted(find_pairs_with_sum(arr, target_sum)) == sorted(expected)
 
 def test_zero_sum():
     """Test summing to zero."""

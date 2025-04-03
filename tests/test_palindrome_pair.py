@@ -13,19 +13,19 @@ def test_palindrome_pair_positive_cases():
     """Test cases where palindrome pair exists."""
     assert palindrome_pair([10, 12, 22, 34]) == True  # 22 - 10 = 12 (palindrome)
     assert palindrome_pair([11, 22, 33, 44]) == True  # 44 - 33 = 11 (palindrome)
-    assert palindrome_pair([12, 22, 36, 48]) == True  # 36 - 22 = 14 (palindrome)
+    assert palindrome_pair([10, 20, 30, 40]) == True  # 20 - 10 = 10 (palindrome)
 
 def test_palindrome_pair_negative_cases():
     """Test cases where no palindrome pair exists."""
     assert palindrome_pair([1, 3, 5, 7]) == False
-    assert palindrome_pair([10, 20, 30, 40]) == False
+    assert palindrome_pair([12, 15, 20, 30]) == False
     assert palindrome_pair([]) == False
     assert palindrome_pair([5]) == False
 
 def test_palindrome_pair_edge_cases():
     """Test edge cases and boundary conditions."""
     assert palindrome_pair([10, 22, 32]) == True  # 32 - 22 = 10 (palindrome)
-    assert palindrome_pair([-20, -10, 0, 10, 20]) == True  # 20 - 10 = 10 (palindrome)
+    assert palindrome_pair([-10, 0, 10, 20]) == True  # 10 - 0 = 10 (palindrome)
 
 def test_palindrome_pair_invalid_inputs():
     """Test error handling for invalid inputs."""

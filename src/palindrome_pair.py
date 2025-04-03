@@ -8,13 +8,11 @@ def is_palindrome(num):
     Returns:
         bool: True if the number is a palindrome, False otherwise.
     """
-    num_str = str(abs(num))
-    
-    # Single digit numbers require special handling
-    if len(num_str) < 2:
+    # Single-digit numbers or negative numbers are not palindromes
+    if num < 10:
         return False
     
-    return num_str == num_str[::-1]
+    return str(num) == str(num)[::-1]
 
 def palindrome_pair(nums):
     """
@@ -48,19 +46,13 @@ def palindrome_pair(nums):
     if len(nums) < 2:
         return False
     
-    # Remove duplicates while preserving order
-    unique_nums = []
-    for num in nums:
-        if num not in unique_nums:
-            unique_nums.append(num)
-    
-    # Check all possible pairs with specific palindrome requirements
-    for i in range(len(unique_nums)):
-        for j in range(i+1, len(unique_nums)):
-            # Calculate difference
-            diff = abs(unique_nums[j] - unique_nums[i])
+    # Check all possible pairs
+    for i in range(len(nums)):
+        for j in range(i+1, len(nums)):
+            # Calculate absolute difference
+            diff = abs(nums[j] - nums[i])
             
-            # Check for palindrome difference
+            # Check if difference is a palindrome
             if is_palindrome(diff):
                 return True
     

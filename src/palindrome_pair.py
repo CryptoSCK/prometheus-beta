@@ -8,6 +8,10 @@ def is_palindrome(num):
     Returns:
         bool: True if the number is a palindrome, False otherwise.
     """
+    # Single digit numbers are not considered palindromes
+    if abs(num) < 10:
+        return False
+    
     return str(abs(num)) == str(abs(num))[::-1]
 
 def palindrome_pair(nums):
@@ -26,7 +30,7 @@ def palindrome_pair(nums):
         ValueError: If list contains non-numeric elements.
     
     Examples:
-        >>> palindrome_pair([1, 2, 3, 4, 5])  # 4 - 2 = 2 (palindrome)
+        >>> palindrome_pair([10, 12, 22, 34])  # 22 - 10 = 12 (palindrome)
         True
         >>> palindrome_pair([10, 20, 30, 40])  # No palindrome difference
         False
@@ -48,8 +52,8 @@ def palindrome_pair(nums):
             # Calculate difference
             diff = abs(nums[j] - nums[i])
             
-            # Strict palindrome check: at least 2 digits and a true palindrome
-            if diff >= 10 and is_palindrome(diff):
+            # Check for palindrome difference
+            if is_palindrome(diff):
                 return True
     
     return False

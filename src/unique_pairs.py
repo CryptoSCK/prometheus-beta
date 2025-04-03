@@ -35,11 +35,14 @@ def get_unique_pairs(numbers: List[int]) -> List[Tuple[int, int]]:
     # Use set to ensure uniqueness and prevent duplicate pairs
     unique_pairs = set()
     
+    # Deduplicate the input list to handle repeated elements
+    unique_nums = sorted(set(numbers))
+    
     # Generate pairs using nested loops
-    for i in range(len(numbers)):
-        for j in range(i + 1, len(numbers)):
+    for i in range(len(unique_nums)):
+        for j in range(i + 1, len(unique_nums)):
             # Create pair with smaller element first to avoid duplicates
-            pair = (min(numbers[i], numbers[j]), max(numbers[i], numbers[j]))
+            pair = (unique_nums[i], unique_nums[j])
             unique_pairs.add(pair)
     
     # Convert set to sorted list for consistent output

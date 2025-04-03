@@ -28,7 +28,8 @@ def test_same_letters_different_count():
     assert is_anagram("aab", "aaa") == False
 
 def test_unicode_characters():
-    assert is_anagram("résumé", "summer") == True
+    assert is_anagram("café", "face") == True
+    assert is_anagram("résumé", "mesure") == True
 
 def test_type_errors():
     with pytest.raises(TypeError):
